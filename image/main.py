@@ -15,13 +15,48 @@ transformation = np.array([ [0.8714, -0.0199, 264],
                             [0.2598,  0.6926, 103],
                             [0.0007, -0.0001, 1]])
 
+support = Polygon([(103,264),(172,517),(397,262),(388,520)])
+painting_polygon = Polygon([(0,0),(0,504),(411,0),(411,504)])
+
+#Finding transformation matrix:
+support_coords = list(support.exterior.coords)
+painting_coords = list(painting_polygon.exterior.coords)
+
+c = support_coords[0][0]
+f = support_coords[0][1]
+i = 1
+
+multFac1 = support_coords[2][0] - support_coords[3][0]
+multFac2 = support_coords[2][1] - support_coords[3][1]
+y = ( multFac1*( support_coords[0][1] + support_coords[3][1]) - multFac2*( support_coords[0][0] + support_coords[3][0] ))/(multFac1*( support_coords[1][1] - support_coords[3][1] ) - multFac2*( support_coords[1][0] - support_coords[3][0] ))
+x = (( support_coords[0][0] + support_coords[3][0] ) - ( support_coords[1][0] - support_coords[3][1] )*y )/multFac1
+
+a = (support_coords[2][0]*x - support_coords[0][0])/painting_coords[3][0]
+d = (support_coords[2][1]*x - support_coords[0][1])/painting_coords[3][0]
+g = (x - 1)/painting_coords[3][0]
+
+b = (support_coords[1][0]*y - support_coords[0][0])/painting_coords[3][1]
+e = (support_coords[1][1]*y - support_coords[0][1])/painting_coords[3][1]
+h = (y - 1)/painting_coords[3][1]
+
+transformation = np.array([[a, b, c],
+                           [d, e, f],
+                           [g, h, i]])
+
 print transformation
+
+print(np.matmul(transformation, np.array([[0],[0],[1]])))
+print(np.matmul(transformation, np.array([[411],[0],[1]])))
+print(np.matmul(transformation, np.array([[0],[504],[1]])))
+print(np.matmul(transformation, np.array([[411],[504],[1]])))
+
 inverse = np.linalg.inv(transformation)
 print inverse
 
 multiplication = np.matmul(transformation, inverse)
 print multiplication
 
+#declaring support quadril
 support = Polygon([(103,264),(172,517),(388,520),(397,262)])
 
 ambient_height, ambient_width = new_ambient.shape[:2]
@@ -34,29 +69,30 @@ print painting[0,0]
 for j in range(0, ambient_height - 1):
     for i in range(0, ambient_width - 1):
         #print support.contains(point)
-        #new_ambient[i, j] = painting[i, j]
-        point1 = Point(j, i)
-        #print (i,j)
-        #new_ambient[j,i] = [255,255,255]
-        correspondent = np.matmul(inverse, [j, i, 1])
-        #print correspondent
-        point = Point(correspondent[1]/correspondent[2], correspondent[0]/correspondent[2])
-        if(support.contains(point1)):
-            #print point
-            print math.floor(point.x), math.floor(point.y)
-            x = int(math.floor(point.x)) - 242
-            y = int(math.floor(point.y)) + 214
-            if(x < 0):
-                x = 0
-            elif x > 504:
-                x = 504
-            if y < 0:
-                y = 0
-            elif y > 411:
-                y = 411
-            print x, y
-            new_ambient[j,i] = painting[y, x] 
-
+#        #new_ambient[i, j] = painting[i, j]
+         point1 = Point(j, i)
+#        #print (i,j)
+#        #new_ambient[j,i] = [255,255,255]
+         correspondent = np.matmul(inverse, [i, j, 1])
+#        #print correspondent
+         point = Point(correspondent[1]/correspondent[2], correspondent[0]/correspondent[2])
+         if(support.contains(point1)):
+#            #print point
+#            #print math.floor(point.x), math.floor(point.y)
+             x = int(math.floor(point.x))
+             y = int(math.floor(point.y))
+             if(x < 0):
+                 x = 0
+             elif x > 504:
+                 x = 504
+             if y < 0:
+                 y = 0
+             elif y > 411:
+                 y = 411
+            #print x, y
+             new_ambient[j,i] = painting[y, x] 
+#            new_ambient[j,i] = 0
+#
 cv2.imshow('original ambient', ambient)
 cv2.imshow('painting', painting)
 cv2.imshow('new ambient', new_ambient)
