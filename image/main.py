@@ -15,10 +15,14 @@ painting = cv2.resize(painting, (0,0), fx=0.5, fy=0.5)
 #                            [0.2598,  0.6926, 103],
 #                            [0.0007, -0.0001, 1]])
 
-P1 = (103,264)
-P2 = (172,517)
-P3 = (397,262) 
-P4 = (388,520)
+#P1 = (103,264)
+#P2 = (172,517)
+#P3 = (397,262) 
+#P4 = (388,520)
+P1 = (140,291)
+P2 = (188,497)
+P3 = (361,289) 
+P4 = (360,499)
 support = Polygon([P1, P2, P3, P4])
 painting_polygon = Polygon([(0,0),(0,504),(411,0),(411,504)])
 
@@ -96,14 +100,14 @@ for j in range(0, ambient_height - 1):
 #            #print math.floor(point.x), math.floor(point.y)
              x = int(math.floor(point.x))
              y = int(math.floor(point.y))
-             if(x < 0):
-                 x = 0
-             elif x > 504:
-                 x = 504
-             if y < 0:
-                 y = 0
-             elif y > 411:
-                 y = 411
+             #if(x < 0):
+             #    x = 0
+             #elif x > 504:
+             #    x = 504
+             #if y < 0:
+             #    y = 0
+             #elif y > 411:
+             #    y = 411
             #print x, y
              new_ambient[j,i] = painting[y, x] 
 #            new_ambient[j,i] = 0
