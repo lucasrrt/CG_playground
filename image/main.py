@@ -11,11 +11,15 @@ new_ambient = ambient.copy()
 painting = cv2.imread('painting.jpg',1)
 painting = cv2.resize(painting, (0,0), fx=0.5, fy=0.5)
 
-transformation = np.array([ [0.8714, -0.0199, 264],
-                            [0.2598,  0.6926, 103],
-                            [0.0007, -0.0001, 1]])
+#transformation = np.array([ [0.8714, -0.0199, 264],
+#                            [0.2598,  0.6926, 103],
+#                            [0.0007, -0.0001, 1]])
 
-support = Polygon([(103,264),(172,517),(397,262),(388,520)])
+P1 = (103,264)
+P2 = (172,517)
+P3 = (397,262) 
+P4 = (388,520)
+support = Polygon([P1, P2, P3, P4])
 painting_polygon = Polygon([(0,0),(0,504),(411,0),(411,504)])
 
 #Finding transformation matrix:
@@ -28,8 +32,8 @@ i = 1
 
 multFac1 = support_coords[2][0] - support_coords[3][0]
 multFac2 = support_coords[2][1] - support_coords[3][1]
-y = ( multFac1*( support_coords[0][1] + support_coords[3][1]) - multFac2*( support_coords[0][0] + support_coords[3][0] ))/(multFac1*( support_coords[1][1] - support_coords[3][1] ) - multFac2*( support_coords[1][0] - support_coords[3][0] ))
-x = (( support_coords[0][0] + support_coords[3][0] ) - ( support_coords[1][0] - support_coords[3][1] )*y )/multFac1
+y = ( multFac1*( support_coords[0][1] - support_coords[3][1]) - multFac2*( support_coords[0][0] - support_coords[3][0] ))/(multFac1*( support_coords[1][1] - support_coords[3][1] ) - multFac2*( support_coords[1][0] - support_coords[3][0] ))
+x = (( support_coords[0][0] - support_coords[3][0] ) - ( support_coords[1][0] - support_coords[3][0] )*y )/multFac1
 
 a = (support_coords[2][0]*x - support_coords[0][0])/painting_coords[3][0]
 d = (support_coords[2][1]*x - support_coords[0][1])/painting_coords[3][0]
@@ -45,10 +49,18 @@ transformation = np.array([[a, b, c],
 
 print transformation
 
-print(np.matmul(transformation, np.array([[0],[0],[1]])))
-print(np.matmul(transformation, np.array([[411],[0],[1]])))
-print(np.matmul(transformation, np.array([[0],[504],[1]])))
-print(np.matmul(transformation, np.array([[411],[504],[1]])))
+print 'testing the transformation'
+m,n,o = np.matmul(transformation, np.array([[0],[0],[1]]))
+print(m/o, n/o)
+
+m,n,o = np.matmul(transformation, np.array([[411],[0],[1]]))
+print(m/o, n/o)
+
+m,n,o = np.matmul(transformation, np.array([[0],[504],[1]]))
+print(m/o, n/o)
+
+m,n,o = np.matmul(transformation, np.array([[411],[504],[1]]))
+print(m/o, n/o)
 
 inverse = np.linalg.inv(transformation)
 print inverse
@@ -56,8 +68,11 @@ print inverse
 multiplication = np.matmul(transformation, inverse)
 print multiplication
 
+
+
+
 #declaring support quadril
-support = Polygon([(103,264),(172,517),(388,520),(397,262)])
+support = Polygon([P1, P2, P4, P3])
 
 ambient_height, ambient_width = new_ambient.shape[:2]
 painting_height, painting_width = painting.shape[:2]
@@ -73,7 +88,7 @@ for j in range(0, ambient_height - 1):
          point1 = Point(j, i)
 #        #print (i,j)
 #        #new_ambient[j,i] = [255,255,255]
-         correspondent = np.matmul(inverse, [i, j, 1])
+         correspondent = np.matmul(inverse, [j, i, 1])
 #        #print correspondent
          point = Point(correspondent[1]/correspondent[2], correspondent[0]/correspondent[2])
          if(support.contains(point1)):
