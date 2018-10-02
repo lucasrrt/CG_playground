@@ -79,9 +79,9 @@ support = Polygon([P1, P2, P4, P3])
 for j in range(0, ambient_height - 1):
     for i in range(0, ambient_width - 1):
         point1 = Point(j, i)
-        correspondent = np.matmul(inverse, [j, i, 1])
-        point = Point(correspondent[1]/correspondent[2], correspondent[0]/correspondent[2])
         if support.contains(point1):
+            correspondent = np.matmul(inverse, [j, i, 1])
+            point = Point(correspondent[1]/correspondent[2], correspondent[0]/correspondent[2])
             x = int(math.floor(point.x))
             y = int(math.floor(point.y))
             new_ambient[j, i] = painting[y, x]
