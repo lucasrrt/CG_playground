@@ -6,13 +6,15 @@ var initialData = {
 }
 
 function render(data, ctx){
-	var sides = 15
-	for(var i=0; i<sides; i++){
-		for (var j = 0; j < sides; j++) {
-			var a = data.angle + i/sides * Math.PI * 2
-			var a2 = data.angle2 + j/sides *Math.PI;
-			var r1 = data.radius
-			ctx.point(r1 * Math.cos( a) * Math.sin( a2), r1 * Math.sin( a) * Math.sin( a2), {r:3 + 3*Math.cos( a2 )})
+	var sides1 = 20
+	var sides2 = 30
+	var a1 = data.angle2 // 0 to pi
+	var a2 = data.angle2 // 0 to 2pi
+	r1 = 300
+	for(var a1=0; a1 < Math.PI; a1 += Math.PI / sides1){
+		for (var a2 = 0; a2 < 2*Math.PI; a2 += Math.PI / sides2) {
+			ctx.point(r1 * Math.cos( a1) * Math.sin( a2), r1 * Math.sin( a1) * Math.sin( a2), {r:2 + 2*Math.cos( a2 )})
+			ctx.point(r1 * Math.cos( a1) * Math.sin( a2), r1 * Math.sin( a1) * Math.sin( a2), {r:1 + 1*Math.cos( a2 ), fill:"yellow"})
 		}
 	}
 }         
