@@ -5,6 +5,20 @@ var initialData = {
 	size: 1
 }
 
+function circle(data, ctx){
+	var sides1 = 80
+	var a1 = 0 // 0 to pi
+	r1 = 300
+	for(var a1=0; a1 < 2*Math.PI; a1 += Math.PI / sides1){
+		ctx.point(r1 * Math.cos( a1), r1 * Math.sin( a1), {r: 1})
+	}
+}         
+
+g9(initialData, circle)
+	.align('center', 'center')
+	.insertInto('#circle')
+
+
 function render(data, ctx){
 	var sides1 = 50
 	var sides2 = 30
