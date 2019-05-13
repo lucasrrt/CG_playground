@@ -12,12 +12,12 @@ painting = cv2.imread('painting.jpg',1)
 
 ambient_height, ambient_width = new_ambient.shape[:2]
 painting_height, painting_width = painting.shape[:2]
-print ambient_height, ambient_width
-print painting_height, painting_width
+#print ambient_height, ambient_width
+#print painting_height, painting_width
 
 P1 = (140,291)
 P2 = (188,497)
-P3 = (361,289) 
+P3 = (361,289)
 P4 = (360,499)
 
 painting_height = painting_height - 1
@@ -51,26 +51,28 @@ transformation = np.array([[a, b, c],
                            [d, e, f],
                            [g, h, i]])
 
+print "Transformation Matrix"
 print transformation
 
-print 'testing the transformation'
-m,n,o = np.matmul(transformation, np.array([[0],[0],[1]]))
-print(m/o, n/o)
+#print 'testing the transformation'
+#m,n,o = np.matmul(transformation, np.array([[0],[0],[1]]))
+#print(m/o, n/o)
+#
+#m,n,o = np.matmul(transformation, np.array([[painting_height],[0],[1]]))
+#print(m/o, n/o)
+#
+#m,n,o = np.matmul(transformation, np.array([[0],[painting_width],[1]]))
+#print(m/o, n/o)
+#
+#m,n,o = np.matmul(transformation, np.array([[painting_height],[painting_width],[1]]))
+#print(m/o, n/o)
 
-m,n,o = np.matmul(transformation, np.array([[painting_height],[0],[1]]))
-print(m/o, n/o)
-
-m,n,o = np.matmul(transformation, np.array([[0],[painting_width],[1]]))
-print(m/o, n/o)
-
-m,n,o = np.matmul(transformation, np.array([[painting_height],[painting_width],[1]]))
-print(m/o, n/o)
-
+print "Inverse"
 inverse = np.linalg.inv(transformation)
 print inverse
 
-multiplication = np.matmul(transformation, inverse)
-print multiplication
+#multiplication = np.matmul(transformation, inverse)
+#print multiplication
 
 
 #declaring support quadrilateral
